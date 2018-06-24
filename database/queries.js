@@ -299,10 +299,10 @@ function getSingleQuestionTrivia(req, res, next) {
     });
 }
 function createQuestionTrivia(req, res, next) {
-  trivID = parseInt(req.body.id_trivia);
-  quesID = parseInt(req.body.id_question);
+  trivID = parseInt(req.param('id_trivia'));
+  quesID = parseInt(req.param('id_question'));
   db.none('insert into pregunta_trivia(id_pregunta, id_trivia)' +
-      'values(${quesID}, ${trivID})',
+      'values(${'+quesID+'}, ${'+trivID+'})',
     req.body)
     .then(function () {
       res.status(200)
