@@ -301,7 +301,7 @@ function getSingleQuestionTrivia(req, res, next) {
 }
 function getAllQuestionsInTrivia(req, res, next) {
   var trivID = parseInt(req.params.id_trivia);
-  db.one('select * from public."preguntasDeTrivia" where id_trivia = $1', trivID)
+  db.one('select * from pg_catalog.preguntasDeTrivia where id_trivia = $1', trivID)
     .then(function (data) {
       res.status(200)
         .json({
