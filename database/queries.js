@@ -33,6 +33,7 @@ module.exports = {
   createUserTrivia: createUserTrivia,
   updateUserTrivia: updateUserTrivia,
   removeUserTrivia: removeUserTrivia,
+  getAllQuestionsInTrivia: getAllQuestionsInTrivia
 };
 
 function getAllUsers(req, res, next) {
@@ -298,9 +299,22 @@ function getSingleQuestionTrivia(req, res, next) {
       return next(err);
     });
 }
+function getAllQuestionsInTrivia(req, res, next) {
+  var trivID = parseInt(req.params.id_trivia);
+  db.one('select * from preguntasDeTrivia where id_trivia = $1', trivID)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved ONE trivia with questions'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
 function createQuestionTrivia(req, res, next) {
-  trivID = parseInt(req.param('id_trivia'));
-  quesID = parseInt(req.param('id_question'));
   db.none('insert into pregunta_trivia(id_pregunta, id_trivia)' +
       'values(${id_question}, ${id_trivia})',
     req.body)
