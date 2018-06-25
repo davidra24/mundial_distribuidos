@@ -32,7 +32,6 @@ router.delete('/api/trivias/:id', query.removeTrivia);
 /* ---------------- Question Trivias Api ----------------- */
 router.get('/api/questionTrivias', query.getAllQuestionTrivias);
 router.get('/api/questionTrivias/:id_trivia/:id_question', query.getSingleQuestionTrivia);
-router.get('/api/questionTrivias/:id_trivia', query.getAllQuestionsInTrivia);
 router.post('/api/questionTrivias/', query.createQuestionTrivia);
 router.delete('/api/questionTrivias/:id_trivia/:id_question', query.removeQuestionTrivia);
 
@@ -41,6 +40,10 @@ router.get('/api/userTrivias', query.getAllUserTrivias);
 router.get('/api/userTrivias/:id_trivia/:id_user', query.getSingleUserTrivia);
 router.post('/api/userTrivias', query.createUserTrivia);
 router.put('/api/userTrivias/:id_trivia/:id_user', query.updateUserTrivia);
-router.delete('/api/userTrivias/:/:id_trivia/:id_question', query.removeUserTrivia);
+router.delete('/api/userTrivias/:id_trivia/:id_question', query.removeUserTrivia);
+
+/* ------------------------ preguntas en trivia ------------------------- */
+router.get('/api/triviasYpreguntas/', query.getAllQuestionsInTrivias);
+router.get('/api/triviasYpreguntas/:id_trivia', query.getAllQuestionsInTrivia);
 
 module.exports = router;
