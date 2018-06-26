@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trivia mundialita</title>
+  <meta name="description" content="Free Bootstrap Theme by BootstrapMade.com">
+  <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,300|Raleway:300,400,900,700italic,700,300,600">
+  <link rel="stylesheet" type="text/css" href="css/jquery.bxslider.css">
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/animate.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script type="text/javascript">
+    var preguntasg;
+    function comenzartrivia(idtrivia){
+      $('#jugar').hide();
+      $('#jugando').show();
+        $('html,body').animate({
+          scrollTop: $("#jugando").offset().top
+        },1000);
+        var requestUrlp= 'https://mundialdistribuidos.herokuapp.com/api/triviasYpreguntas/'+idtrivia;
+        var requestp = new XMLHttpRequest();
+        requestp.open('GET', requestUrlp);
+        requestp.responseType = 'json';
+        requestp.send();
+        requestp.onload = function(){
+          var preguntas = requestp.response;
+          preguntasg=preguntas;
+           $('#pregunta').text(preguntasg['data'][0]['pregunta']);
+           var div_resp = document.getElementById('div_res');
+          div_resp.insertAdjacentHTML('beforeend','<input type="radio" name="respuesta"  class="submit " value="1" id="rta1" checked>'+preguntasg['data'][0]['respuesta_uno']+' <br>');
+          div_resp.insertAdjacentHTML('beforeend','<input type="radio" name="respuesta"  class="submit " value="2" id="rta2">'+preguntasg['data'][0]['respuesta_dos']+' <br>');
+          div_resp.insertAdjacentHTML('beforeend','<input type="radio" name="respuesta"  class="submit " value="3" id="rta3">'+preguntasg['data'][0]['respuesta_tres']+' <br>');
+          div_resp.insertAdjacentHTML('beforeend','<input type="radio" name="respuesta"  class="submit " value="4" id="rta4">'+preguntasg['data'][0]['respuesta_cuatro']+' <br>');
+
+        }
+         var div_res = document.getElementById('div_respuestas');
+         
+         div_res.insertAdjacentHTML('beforeend', '<button onclick="validarrespuesta()">Responder</button>');
+         console.log("antes");
+    }
+    function validarrespuesta(){
+      console.log("entra");
+      var posision=0;
+      var correcta = preguntasg['data'][posision]['correcta'];
+      var seleccionada = getRadioVal('form_respuestas', respuesta);
+      var puntos=0;
+      if (correcta == seleccionada) {
+        puntos += 10;
+        console.log(puntos);
+      }
+      console.log(puntos);
+      posision++;
+      $('#pregunta').text(preguntasg['data'][1]['pregunta']);
+      div_respondiendo = document.getElementById('div_res');
+      div_respondiendo.find('#rta1').text(preguntasg['data'][posision]['respuesta_uno']);
+
+    }
+    function getRadioVal(form, name){
+      var val;
+      var radios = form.elements[name];
+      for (var i = 0, len=radios.length; i<len; i++) {
+        if (radios[i].checked) {
+          val = radios[i].value;
+          break;
+        }
+      }
+      return val;
+    }
+    function mostartrivias(){
+
+       var requestUrl= 'https://mundialdistribuidos.herokuapp.com/api/trivias';
+        var request = new XMLHttpRequest();
+        request.open('GET', requestUrl);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function(){
+          var trivias = request.response;
+         
+          var i = Object.keys(trivias.data).length;
+          console.log(i)
+          for (var j = 0; j < i; j++) {
+            var trivia = trivias['data'][j];
+            var triviasa = document.getElementById('triviasActivas');
+          triviasa.insertAdjacentHTML('beforeend',' <div class="col-md-4 col-sm-6 col-xs-12 portfolio-item padding-right-zero mr-btn-15"><figure><img src="img/trivia1.png" class="img-responsive"><figcaption><h2>Unete a esta trivia, tiempo para contestar: '+ trivia['tiempo_maximo']+'</h2><a href="#jugar" onclick="unirse('+trivia['id']+')">Unirse</a>         </figcaption></figure></div> ');
+          }
+        
+         
+        }
+    }
+    function unirse(idtrivia){
+        $('#jugando').hide();
+         $('html,body').animate({
+          scrollTop: $("#jugar").offset().top
+        },1000);
+         var btn_empezar = document.getElementById('div_empezar');
+         btn_empezar.insertAdjacentHTML('beforeend','<a href="#" class="btn btn-more" onclick="comenzartrivia('+idtrivia+')">Comenzar</a>')
+         //precomenzartrivia(idtrivia);
+        
+    }
+    function enviarusuario(){
+      fetch('https://mundialdistribuidos.herokuapp.com/api/users',{
+        method:'POST',
+        body: new FormData(document.getElementById('form_usuario'))
+      });
+
+    }
+    
+    window.onload=mostartrivias;
+  </script>
+</head>
+
+<body>
+
+  <div class="loader"></div>
+  <div id="myDiv">
+    <!--HEADER-->
+    <div class="header">
+      <div class="bg-color">
+        <header id="main-header">
+          <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+                <a class="navbar-brand" href="#">Trivia mundialita</span></a>
+              </div>
+              <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="active"><a href="#main-header">Inicio</a></li>
+                  <li class=""><a href="#estadisticas">Estadisticas</a></li>
+                  <li class=""><a href="#opciones">Opciones</a></li>
+                  <li class=""><a href="#trivias">Trivias activas</a></li>
+                  <li class=""><a href="#ranking">Ranking</a></li>
+                  <li class=""><a href="#creartrivia">Crear trivia</a></li>
+                  <li class=""><a href="#crearusuario">Crear usuario</a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </header>
+        <div class="wrapper">
+          <div class="container">
+            <div class="row">
+              <div class="banner-info text-center wow fadeIn delay-05s">
+                <h1 class="bnr-title">Bienvenido a la trivia del banco de las americas</h1>
+                <h2 class="bnr-sub-title">¡¡Juega ahora!!</h2>
+                <p class="bnr-para">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <br>ex ea commodo consequat.</p>
+                <div class="brn-btn">
+                  <a href="#trivias" class="btn btn-download">Unirse</a>
+                  <a href="#creartrivia" class="btn btn-more">Crear Trivia</a>
+                </div>
+                <div class="overlay-detail">
+                  <a href="#feature"><i class="fa fa-angle-down"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/ HEADER-->
+    <!---->
+    <section id="estadisticas" class="section-padding wow fadeIn delay-05s">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="wrap-item text-center">
+              <div class="item-img">
+                <img src="img/ser01.png">
+              </div>
+              <h3 class="pad-bt15">Respuestas correctas</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="wrap-item text-center">
+              <div class="item-img">
+                <img src="img/incorrecta.jpg" width="70" height="60">
+              </div>
+              <h3 class="pad-bt15">Respuestas incorrectas</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="wrap-item text-center">
+              <div class="item-img">
+                <img src="img/tiempo.gif" width="70" height="60">
+              </div>
+              <h3 class="pad-bt15">Tiempo total</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="wrap-item text-center">
+              <div class="item-img">
+                <img src="img/puntaje.jpg" width="70" height="60">
+              </div>
+              <h3 class="pad-bt15">Puntaje</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="wrap-item text-center">
+              <div class="item-img">
+              
+              </div>
+              <h3 class="pad-bt15">Porcentaje Respuestas correctas</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="wrap-item text-center">
+              <div class="item-img">
+                
+              </div>
+              <h3 class="pad-bt15">Porcentaje Respuestas incorrectas</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="wrap-item text-center">
+              <div class="item-img">
+                
+              </div>
+              <h3 class="pad-bt15">Tiempo promedio total</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    <!---->
+    <!---->
+    <section id="opciones" class="section-padding wow fadeInUp delay-05s">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <h2 class="service-title pad-bt15">Que deseas hacer?</h2>
+            <p class="sub-title pad-bt15">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<br>tempor incididunt ut labore et dolore magna aliqua.</p>
+            <hr class="bottom-line">
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <h3><span>C</span>rear una trivia personalisada</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <a href="#creartrivia">learn more...</a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <h3><span>U</span>nirte a una trivia</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <a href="#trivias">learn more...</a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <h3><span>V</span>er tu desempeño</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <a href="#estadisticas">learn more...</a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="service-item">
+              <h3><span>V</span>er ranking</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <a href="#ranking">Learn more...</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="jugar" class="trivia section-padding wow fadeInUp delay-05s ">
+    <div class="">
+          <div class="container ">
+            <div class="row">
+              <div class="banner-info text-center wow fadeIn delay-05s">
+                <h1 class="bnr-title">Estamos a punto de iniciar</h1>
+                <h2 class="bnr-sub-title">Cuando estes listo puedes comenzar</h2>
+                <p class="bnr-para">Cuando todos esten listos la trivia empezara...</p>
+                <div class="brn-btn" id="div_empezar">
+                    
+                </div>
+
+                <div class="overlay-detail">
+                  <a href="#feature"><i class="fa fa-angle-down"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="trivia" id="jugando">
+        <div class="" id="jug">
+          <div class="container">
+            <div class="row">
+              <div class="banner-info text-center wow fadeIn delay-05s">
+                <h1 class="bnr-title" id="pregunta"></h1>
+                <br>
+                <div class="row">
+                  <div class="col-md-3 col-sm-3 col-xs-3">
+                    
+                  </div>
+               <div class="col-md-9">
+            <div class="">
+              <div id="sendmessage"></div>
+              <div id="errormessage"></div>
+              <form action="" method="post" role="form" class="respuestaForm" id="form_respuestas">
+              <div class="row" >  
+                  <div class="col-md-9 col-sm-9 col-xs-9 form-group" id="div_respuestas">
+                    <div class="input-group container-fluid" id="div_res">
+                      
+                    
+                    </div>
+                     
+                  </div>
+             
+              </div>
+              
+              <div class="row">
+               
+              </div>
+                               
+                
+              </form>
+
+            </div>
+          </div>
+         </div>
+        </div>
+      </div>
+
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <section id="trivias" class="section-padding wow fadeInUp delay-05s">
+      <div class="container">
+        <div class="row" id="triviasActivas">
+          <div class="col-md-12 text-center">
+            <h2 class="service-title pad-bt15">Trivias activas actualmente</h2>
+            <p class="sub-title pad-bt15">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<br>tempor incididunt ut labore et dolore magna aliqua.</p>
+            <hr class="bottom-line">
+          </div>
+          
+         </div>
+      </div>
+    </section>
+    <!---->
+    <!---->
+    <section id="ranking" class="wow fadeInUp delay-05s">
+      <div class="bg-testicolor">
+        <div class="container section-padding">
+          <div class="row">
+            <div class="testimonial-item">
+              <ul class="bxslider">
+                <li>
+                  <blockquote>
+                    <img src="img/thumb.png" class="img-responsive">
+                    <h1>1 </h1>
+                  </blockquote>
+                  <small>Shaun Paul</small>
+                  <small>800 puntos</small>
+                </li>
+                <li>
+                  <blockquote>
+                    <img src="img/thumb.png" class="img-responsive">
+                   <h1>2</h1>
+                  </blockquote>
+                  <small>Shaun Paul</small>
+                  <small>780 puntos</small>
+                </li>
+                <li>
+                  <blockquote>
+                    <img src="img/thumb.png" class="img-responsive">
+                    <h1>3</h1>
+                  </blockquote>
+                  <small>Shaun Paul</small>
+                  <small>770 puntos</small>
+                </li>
+                <li>
+                  <blockquote>
+                    <img src="img/thumb.png" class="img-responsive">
+                   <h1>4</h1>
+                  </blockquote>
+                  <small>Shaun Paul</small>
+                  <small>760 puntos</small>
+                </li>
+                <li>
+                  <blockquote>
+                    <img src="img/thumb.png" class="img-responsive">
+                   <h1>5</h1>
+                  </blockquote>
+                  <small>Shaun Paul</small>
+                  <small>740 puntos</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!---->
+    <section id="creartrivia" class="section-padding wow fadeInUp delay-05s">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <h2 class="service-title pad-bt15">Crear trivia</h2>
+            <p class="sub-title pad-bt15">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<br>tempor incididunt ut labore et dolore magna aliqua.</p>
+            <hr class="bottom-line">
+          </div>
+          <div class="col-md-12 col-sm-6 col-xs-12">
+            <div class="contact-form">
+              <div id="sendmessage">Trivia creada, a jugar!</div>
+              <div id="errormessage"></div>
+              <form action="https://mundialdistribuidos.herokuapp.com/api/trivias" method="post" role="form" class="contactForm">
+                <div class="col-md-6 ">
+                  <div class="form-group">
+                    <input type="text" name="name_trivia" class="form-control" id="name_trivia" placeholder="Nombre para la trivia" data-rule="minlen:4" data-msg="Por favor ingrese al menos 4 caracteres" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="number" class="form-control" name="capacidad" id="capacidad" placeholder="Cantidad de participantes" data-rule="capacidad" data-msg="Por favor ingrese la capacidad" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label type="text" class="form-control" name="capacidad_lbl" id="capacidad_lbl" >Ingrese la cantidad en minutos que la trivia estara disponible</label>
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <select class="form-control" name="tiempo" id="tiempo" placeholder="Tiempo para la trivia, en minutos">
+                      <option value="300">5</option>
+                      <option value="360">6</option>
+                      <option value="420">7</option>
+                      <option value="480">8</option>
+                      <option value="540">9</option>
+                      <option value="600">10</option>
+                    </select>
+                    <div class="validation"></div>
+                  </div>
+                </div>
+               
+                <div class="col-md-6">
+                  
+                  <button type="submit" class="btn btn-primary btn-submit">Crear trivia</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+         
+        </div>
+      </div>
+    </section>
+    <!---->
+    <section id="crearusuario" class="section-padding wow fadeInUp delay-05s">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center white">
+            <h2 class="service-title pad-bt15">Crear un nuevo usuario</h2>
+            <p class="sub-title pad-bt15"></p>
+            <hr class="bottom-line white-bg">
+          </div>
+          
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="contact-form">
+              <div id="sendmessage">Your message has been sent. Thank you!</div>
+              <div id="errormessage"></div>
+              <form action="https://mundialdistribuidos.herokuapp.com/api/users" enctype="multipart/form-data" method="POST" role="form" class="contactForm" id="form_usuario">
+                <div class="col-md-6 ">
+                  <div class="form-group">
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Por favor ingrese al menos 4 caracteres" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                 <div class="col-md-6">
+                  <div class="form-group">
+                    <select class="form-control" name="genero" id="genero" placeholder="genero">
+                      <option value="Femenino">Femenino</option>
+                      <option value="Masculino">Masculino</option>
+                    </select>
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Por favor ingrese su email" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+               
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña" data-rule="minlen:8" data-msg="Por favor ingrese al menos 8 caracteres" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="file" name="avatar" id="avatar" class="form-control">
+                    <div class="validation"></div>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-submit" onclick="enviarusuario()">Registrar</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!---->
+    <!---->
+    <footer id="footer">
+      <div class="container">
+        <div class="row text-center">
+         
+        </div>
+      </div>
+    </footer>
+    <!---->
+  </div>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery.easing.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/wow.js"></script>
+  <script src="js/jquery.bxslider.min.js"></script>
+  <script src="js/custom.js"></script>
+  <script src="contactform/contactform.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trivia mundialita</title>
+  <meta name="description" content="Free Bootstrap Theme by BootstrapMade.com">
+  <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,300|Raleway:300,400,900,700italic,700,300,600">
+  <link rel="stylesheet" type="text/css" href="css/jquery.bxslider.css">
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/animate.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script type="text/javascript">
+    function login(){
+      var usuario = $("#usuario").val();
+        var contraseña = $("#pwd").val();
+        var requestUrl= 'https://mundialdistribuidos.herokuapp.com/api/users';
+        var request = new XMLHttpRequest();
+        request.open('GET', requestUrl);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function(){
+          var users = request.response;
+          var estado = false;
+          var i = Object.keys(users.data).length;
+          console.log(i)
+          for (var j = 0; j < i; j++) {
+            var usuariobd= users['data'][j];
+             console.log(" "+ usuariobd['nombre'] + ' ' +usuario + '+' + usuariobd['contrasena'] +' '+contraseña);
+
+            if (usuariobd['nombre'] == usuario && contraseña == usuariobd['contrasena']) {
+              console.log('entro al if')
+              estado = true;
+              window.location="inicio.html";
+            }
+          }
+          if (estado == false) {
+            console.log('entro al false')
+            var errormesage = document.getElementById("mensajeError");
+            errormesage.innerHTML ="Datos incorrectos intente nuevamente";
+            $form.each(function() {
+        this.reset();
+        
+      });
+          }
+        }
+    }
+    
+        
+      
+  </script>
+</head>
+
+<body>
+
+  <div class="loader"></div>
+  <div id="myDiv">
+    <!--HEADER-->
+    <div class="header">
+      <div class="bg-color">
+        <header id="main-header">
+          <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+                <a class="navbar-brand" href="#">Trivia mundialita</span></a>
+              </div>
+              <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+    
+                  <li class=""><a href="#crearusuario">Crear usuario</a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </header>
+        <div class="wrapper">
+          <div class="container">
+            <div class="row">
+              <div class="banner-info text-center wow fadeIn delay-05s">
+                <h1 class="bnr-title">Bienvenido a la trivia del banco de las americas</h1>
+                <h2 class="bnr-sub-title">¡¡Juega ahora!!</h2>
+                <p class="bnr-para">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <br>ex ea commodo consequat.</p>
+                <div class="brn-btn">
+                  <a href="#login" class="btn btn-download">Iniciar sesion</a>
+                  <a href="#crearusuario" class="btn btn-more">Crear Usuario</a>
+                </div>
+                <div class="overlay-detail">
+                  <a href="#feature"><i class="fa fa-angle-down"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/ HEADER-->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <section id="login" class="section-padding wow fadeInUp delay-05s">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center white">
+            <h2 class="service-title pad-bt15">Iniciar session</h2>
+            <p class="sub-title pad-bt15"></p>
+            <hr class="bottom-line white-bg">
+          </div>
+          
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="">
+              <div id="sendmessage">Your message has been sent. Thank you!</div>
+              <div id="mensajeError"><h2></h2></div>
+              <form action="" method="post" role="form" class="contactForm">
+                <div class="col-md-6 ">
+                  <div class="form-group">
+                    <input type="text" name="usuario" class="form-control" id="usuario" placeholder="Usuario" data-rule="minlen:4" data-msg="Por favor ingrese al menos 4 caracteres" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="password" class="form-control" name="pwd" id="pwd" placeholder="Contraseña" data-rule="password" data-msg="Por favor ingrese su Contraseña" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+               
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-primary btn-submit" id="iniciarsesion" onclick="login()">Iniciar sesion</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!---->
+    <section id="crearusuario" class="section-padding wow fadeInUp delay-05s">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center white">
+            <h2 class="service-title pad-bt15">Crear un nuevo usuario</h2>
+            <p class="sub-title pad-bt15"></p>
+            <hr class="bottom-line white-bg">
+          </div>
+          
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="contact-form">
+              <div id="sendmessage">Your message has been sent. Thank you!</div>
+              <div id="errormessage"></div>
+              <form action="" method="post" role="form" class="contactForm">
+                <div class="col-md-6 ">
+                  <div class="form-group">
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Por favor ingrese al menos 4 caracteres" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Por favor ingrese su email" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <select class="form-control" name="genero" id="genero" placeholder="genero">
+                      <option>Femenino</option>
+                      <option>Masculino</option>
+                    </select>
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña" data-rule="minlen:8" data-msg="Por favor ingrese al menos 8 caracteres" />
+                    <div class="validation"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="file" name="archivo" id="archivo" class="form-control">
+                    <div class="validation"></div>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-submit">Registrar</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!---->
+    <!---->
+    <footer id="footer">
+      <div class="container">
+        <div class="row text-center">
+         
+        </div>
+      </div>
+    </footer>
+    <!---->
+  </div>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery.easing.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/wow.js"></script>
+  <script src="js/jquery.bxslider.min.js"></script>
+  <script src="js/custom.js"></script>
+  <script src="contactform/contactform.js"></script>
+
+</body>
+</html>
